@@ -28,14 +28,11 @@ User = Client(
 @Bot.on_message(filters.private & filters.command("start"))
 async def start_handler(_, event: Message):
     await event.reply_text(
-        "Hi, I am Messages Search Bot!\n\n"
-        "**Developer:** @AbirHasan2005\n"
-        "**Demo Bot:** @AHListBot",
+        "**Welcome to Pocket Fm Hub bot**\n\n"
+        "Here You can search all the stories of pocket fm hub.",
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Support Group", url="https://t.me/DevsZone"),
-             InlineKeyboardButton("Bots Channel", url="https://t.me/Discovery_Updates")],
-            [InlineKeyboardButton("Developer - @AbirHasan2005")],
-            [InlineKeyboardButton("Search Inline", switch_inline_query_current_chat=""), InlineKeyboardButton("Go Inline", switch_inline_query="")]
+            [InlineKeyboardButton("Join Group", url="https://t.me/pocketfmhubchat")],
+            [InlineKeyboardButton("Join Channel", url="https://t.me/pocketfmhub")]
         ])
     )
 
