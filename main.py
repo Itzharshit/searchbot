@@ -1,8 +1,4 @@
-# (c) @AbirHasan2005
-# I just made this for searching a channel message from inline.
-# Maybe you can use this for something else.
-# I first made this for @AHListBot ...
-# Edit according to your use.
+
 
 from configs import Config
 from pyrogram import Client, filters, idle
@@ -28,15 +24,46 @@ User = Client(
 @Bot.on_message(filters.private & filters.command("start"))
 async def start_handler(_, event: Message):
     await event.reply_text(
-        "**Welcome to Pocket Fm Hub bot**\n\n"
-        "Here You can search all the stories of pocket fm hub.",
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Join Group", url="https://t.me/pocketfmhubchat")],
-            [InlineKeyboardButton("Join Channel", url="https://t.me/pocketfmhub")]
-        ])
+        "**Hello, I am PocketFm Robot Created By @Harshit_Shrivastav.**\n\n"
+        "I can search about all the available stories of pocketFm without any distractions."
+        "Send me story name i will give you link.",
     )
+@Bot.on_message(filters.command('request') & filters.private)
+async def report(bot, message):
+        if message.reply_to_message:
+                                  await bot.send_message(chat_id=ADMIN, text=f"<b>⭕️NEW MESSAGE⭕️\n \n🧿 Name: {message.from_user.mention}\n🧿 User ID:</b> <code>{message.chat.id}</code>")
+                                  await bot.forward_messages(chat_id=ADMIN, from_chat_id=message.from_user.id, message_ids=message.reply_to_message.message_id)
+                                  await message.reply_text("<b>✅ Your Feedback Successfully Submitted to the Admins</b>")
+        else:
+             await message.reply_text("<b>Use this command as the reply of any Message to Report</b>")
 
-
+                         
+        
+@Bot.on_message(filters.command('reply') & filters.private)
+async def replyt(bot, message):
+    if message.from_user.id == ADMIN: 
+               if message.reply_to_message:
+                                    userid=int(message.text.replace("/reply"," "))
+                                    await bot.send_message(chat_id=userid, text=f"<b>An Admin is responded to your feedback ✨</b>")
+                                    await bot.copy_message(chat_id=userid, from_chat_id=ADMIN, message_id=message.reply_to_message.message_id)
+                                    await message.reply_text("<b>✅ Your Reply Successfully Send to the User</b>")
+               else:
+                    await message.reply_text("<b>Use this command as the reply of any Message to Reply</b>")                         
+    else:
+         await message.reply_text("<b>That's not for you bruh 😅</b>")
+@Bot.on_message(filters.private & filters.text)
+async def filter(bot, update):
+    await update.reply_text(
+        text="`Click the button below for searching...`",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton(text="Search Here", switch_inline_query_current_chat=update.text),
+                InlineKeyboardButton(text="Search in another chat", switch_inline_query=update.text)]
+            ]
+        ),
+        disable_web_page_preview=True,
+        quote=True
+    )
 @Bot.on_inline_query()
 async def inline_handlers(_, event: InlineQuery):
     answers = list()
@@ -44,34 +71,28 @@ async def inline_handlers(_, event: InlineQuery):
     if event.query == "":
         answers.append(
             InlineQueryResultArticle(
-                title="Tutorial Video",
-                description="If you are facing any problem on using this bot, Watch this Tutorial...",
-                thumb_url="https://i.imgur.com/6jZsMYG.png",
+                title="Credits",
+                description="@Harshit_shrivastav, @Kansalpiyush and everyone in this journey.",
+                thumb_url="https://i.ibb.co/hLSd0r0/unnamed.jpg",
                 input_message_content=InputTextMessageContent(
-                    message_text="Please watch this video if you are facing problem in opening links.",
+                    message_text="Credits for Audiobooks.",
                     disable_web_page_preview=True
                 ),
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("Watch Tutorial", url="https://jmp.sh/q24v5ga")]
+                    [InlineKeyboardButton("Harshit Shrivastav", url="https://t.me/Harshit_Shrivastav"),
+                     InlineKeyboardButton("Piyush Kansal", url="https://t.me/Kansalpiyush")],
+                    [InlineKeyboardButton("Search Story", switch_inline_query_current_chat="")]
                 ])
             )
         )
-        answers.append(
-            InlineQueryResultArticle(
-                title="Support Channel & Group",
-                description="Channel - @pocketfmhub\nGroup - @pocketfmhubchat",
-                thumb_url="https://i.ibb.co/cNYJHYZ/IMG-20210815-144921.jpg",
-                input_message_content=InputTextMessageContent(
-                    message_text="Using this bot you can search all the available audiobooks of pocket Fm Hub without visiting main channel",
-                    disable_web_page_preview=True
-                ),
-                reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("Support Group", url="https://t.me/pocketfmhubchat"),
-                     InlineKeyboardButton("Bots Channel", url="https://t.me/pocketfmhub")],
-                    [InlineKeyboardButton("Search Here", switch_inline_query_current_chat="")]
-                ])
+        try:
+            await event.answer(
+            results=answers,
+            cache_time=0
             )
-        )
+            print(f"[{Config.BOT_SESSION_NAME}] - Answered Successfully - {event.from_user.first_name}")
+        except QueryIdInvalid:
+            print(f"[{Config.BOT_SESSION_NAME}] - Failed to Answer - {event.from_user.first_name}")
     # Search Channel Message using Search Query Words
     else:
         async for message in User.search_messages(chat_id=Config.CHANNEL_ID, limit=50, query=event.query):
@@ -79,7 +100,7 @@ async def inline_handlers(_, event: InlineQuery):
                 answers.append(InlineQueryResultArticle(
                     title="{}".format(message.text.split("\n", 1)[0]),
                     description="{}".format(message.text.rsplit("\n", 1)[-1]),
-                    thumb_url="https://i.ibb.co/cNYJHYZ/IMG-20210815-144921.jpg",
+                    thumb_url="https://i.ibb.co/hLSd0r0/unnamed.jpg",
                     reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Search Again", switch_inline_query_current_chat="")]]),
                     input_message_content=InputTextMessageContent(
                         message_text=message.text.markdown,
@@ -95,7 +116,6 @@ async def inline_handlers(_, event: InlineQuery):
         print(f"[{Config.BOT_SESSION_NAME}] - Answered Successfully - {event.from_user.first_name}")
     except QueryIdInvalid:
         print(f"[{Config.BOT_SESSION_NAME}] - Failed to Answer - {event.from_user.first_name}")
-
 # Start Clients
 Bot.start()
 User.start()
