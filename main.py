@@ -1,5 +1,5 @@
 #harshit shrivastav
-from configs import ADMIN
+ADMIN = 1607263889
 from configs import Config
 from pyrogram import Client, filters, idle
 from pyrogram.errors import QueryIdInvalid
