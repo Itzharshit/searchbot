@@ -10,3 +10,4 @@ class Config(object):
     BOT_SESSION_NAME = os.environ.get("BOT_SESSION_NAME", "Messages-Search-Bot")
     USER_SESSION_STRING = os.environ.get("USER_SESSION_STRING", "")
     CHANNEL_ID = int(os.environ.get("CHANNEL_ID", -100))
+    ADMIN = int(os.environ.get("ADMIN", -100))
