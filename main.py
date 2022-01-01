@@ -33,7 +33,7 @@ async def report(bot, message):
         if message.reply_to_message:
                                   await bot.send_message(chat_id=config.ADMIN, text=f"<b>⭕️NEW MESSAGE⭕️\n \n🧿 Name: {message.from_user.mention}\n🧿 User ID:</b> <code>{message.chat.id}</code>")
                                   await bot.forward_messages(chat_id=config.ADMIN, from_chat_id=message.from_user.id, message_ids=message.reply_to_message.message_id)
-                                  await message.reply_text("<b>✅ Your Feedback Successfully Submitted to the Admins</b>")
+                                  await message.reply_text("<b>✅ Your Request Successfully Submitted to the Admins</b>")
         else:
              await message.reply_text("<b>Use this command as the reply of any Message to Report</b>")
 
@@ -44,8 +44,8 @@ async def replyt(bot, message):
     if message.from_user.id == config.ADMIN: 
                if message.reply_to_message:
                                     userid=int(message.text.replace("/reply"," "))
-                                    await bot.send_message(chat_id=userid, text=f"<b>An Admin is responded to your feedback ✨</b>")
-                                    await bot.copy_message(chat_id=userid, from_chat_id=ADMIN, message_id=message.reply_to_message.message_id)
+                                    await bot.send_message(chat_id=userid, text=f"<b>An Admin is responded to your Request ✨</b>")
+                                    await bot.copy_message(chat_id=userid, from_chat_id=config.ADMIN, message_id=message.reply_to_message.message_id)
                                     await message.reply_text("<b>✅ Your Reply Successfully Send to the User</b>")
                else:
                     await message.reply_text("<b>Use this command as the reply of any Message to Reply</b>")                         
